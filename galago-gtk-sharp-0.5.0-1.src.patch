@@ -1,0 +1,94 @@
+diff -urN -x CYGWIN-PATCHES -x 'aclocal.m4*' -x autom4te.cache -x config.cache -x config.log -x config.status -x config.h -x config.h.in -x ABOUT-NLS -x Makefile.in.in -x Makevars.template -x '*SlackBuild*' -x '*.egg-info' -x '*.class' -x '*.pyc' -x '*.mo' -x '*.gmo' -x '*.orig' -x '*.rej' -x '*.spec' -x '*.temp' -x '*~' -x '*.stackdump' -x COPYING -x INSTALL -x compile -x config-ml.in -x config.guess -x config.sub -x depcomp -x elisp-comp -x install-sh -x ltmain.sh -x mdate-sh -x missing -x mkinstalldirs -x py-compile -x symlink-tree -x texinfo.tex -x ylwrap -x Makefile.in -x makefile.in -x configure -x omf.make -x xmldocs.make -x gnome-doc-utils.make -x gnome-doc-utils.m4 -x intltool.m4 -x intltool-extract -x intltool-extract.in -x intltool-merge -x intltool-merge.in -x intltool-update -x intltool-update.in -x '*.xml' origsrc/galago-gtk-sharp-0.5.0/configure.ac src/galago-gtk-sharp-0.5.0/configure.ac
+--- origsrc/galago-gtk-sharp-0.5.0/configure.ac	2006-04-17 03:14:12.000000000 -0500
++++ src/galago-gtk-sharp-0.5.0/configure.ac	2007-06-22 20:44:56.265625000 -0500
+@@ -80,13 +80,23 @@
+ 
+ 	GENERATED_SOURCES=generated/*.cs
+ 
+-	if test `uname -s` = "Darwin"; then
+-		LIB_PREFIX=
++	case `uname -s` in
++	  Darwin)
++		LIB_PREFIX=lib
++		LIB_SONAME=.
+ 		LIB_SUFFIX=.dylib
+-	else
+-		LIB_PREFIX=.so
++		;;
++	  CYGWIN*)
++		LIB_PREFIX=cyg
++		LIB_SONAME=-
++		LIB_SUFFIX=.dll
++		;;
++	  *)
++		LIB_PREFIX=lib
++		LIB_SONAME=.so.
+ 		LIB_SUFFIX=
+-	fi
++		;;
++	esac
+ 
+ 	AC_PATH_PROG(GAPI_FIXUP, gapi2-fixup, no)
+ 	AC_PATH_PROG(GAPI_CODEGEN, gapi2-codegen, no)
+@@ -126,6 +136,7 @@
+ AC_SUBST(RUNTIME)
+ AC_SUBST(CSC)
+ AC_SUBST(LIB_PREFIX)
++AC_SUBST(LIB_SONAME)
+ AC_SUBST(LIB_SUFFIX)
+ AC_SUBST(GACUTIL)
+ AC_SUBST(GACUTIL_FLAGS)
+@@ -171,6 +182,7 @@
+ Makefile
+ galago-gtk/Makefile
+ galago-gtk/AssemblyInfo.cs
++galago-gtk/galago-gtk-sharp.dll.config
+ sources/Makefile
+ sources/galago-gtk-sharp-sources.xml
+ tests/Makefile
+diff -urN -x CYGWIN-PATCHES -x 'aclocal.m4*' -x autom4te.cache -x config.cache -x config.log -x config.status -x config.h -x config.h.in -x ABOUT-NLS -x Makefile.in.in -x Makevars.template -x '*SlackBuild*' -x '*.egg-info' -x '*.class' -x '*.pyc' -x '*.mo' -x '*.gmo' -x '*.orig' -x '*.rej' -x '*.spec' -x '*.temp' -x '*~' -x '*.stackdump' -x COPYING -x INSTALL -x compile -x config-ml.in -x config.guess -x config.sub -x depcomp -x elisp-comp -x install-sh -x ltmain.sh -x mdate-sh -x missing -x mkinstalldirs -x py-compile -x symlink-tree -x texinfo.tex -x ylwrap -x Makefile.in -x makefile.in -x configure -x omf.make -x xmldocs.make -x gnome-doc-utils.make -x gnome-doc-utils.m4 -x intltool.m4 -x intltool-extract -x intltool-extract.in -x intltool-merge -x intltool-merge.in -x intltool-update -x intltool-update.in -x '*.xml' origsrc/galago-gtk-sharp-0.5.0/galago-gtk/Makefile.am src/galago-gtk-sharp-0.5.0/galago-gtk/Makefile.am
+--- origsrc/galago-gtk-sharp-0.5.0/galago-gtk/Makefile.am	2006-04-17 03:12:48.000000000 -0500
++++ src/galago-gtk-sharp-0.5.0/galago-gtk/Makefile.am	2007-06-22 20:39:13.109375000 -0500
+@@ -39,6 +39,7 @@
+ 
+ EXTRA_DIST =			\
+ 	AssemblyInfo.cs.in	\
++	$(ASSEMBLY).config.in \
+ 	galago-gtk-sharp.snk \
+ 	$(RAW_API)		\
+ 	$(METADATA)		\
+diff -urN -x CYGWIN-PATCHES -x 'aclocal.m4*' -x autom4te.cache -x config.cache -x config.log -x config.status -x config.h -x config.h.in -x ABOUT-NLS -x Makefile.in.in -x Makevars.template -x '*SlackBuild*' -x '*.egg-info' -x '*.class' -x '*.pyc' -x '*.mo' -x '*.gmo' -x '*.orig' -x '*.rej' -x '*.spec' -x '*.temp' -x '*~' -x '*.stackdump' -x COPYING -x INSTALL -x compile -x config-ml.in -x config.guess -x config.sub -x depcomp -x elisp-comp -x install-sh -x ltmain.sh -x mdate-sh -x missing -x mkinstalldirs -x py-compile -x symlink-tree -x texinfo.tex -x ylwrap -x Makefile.in -x makefile.in -x configure -x omf.make -x xmldocs.make -x gnome-doc-utils.make -x gnome-doc-utils.m4 -x intltool.m4 -x intltool-extract -x intltool-extract.in -x intltool-merge -x intltool-merge.in -x intltool-update -x intltool-update.in -x '*.xml' origsrc/galago-gtk-sharp-0.5.0/galago-gtk/galago-gtk-sharp.dll.config.in src/galago-gtk-sharp-0.5.0/galago-gtk/galago-gtk-sharp.dll.config.in
+--- origsrc/galago-gtk-sharp-0.5.0/galago-gtk/galago-gtk-sharp.dll.config.in	1969-12-31 18:00:00.000000000 -0600
++++ src/galago-gtk-sharp-0.5.0/galago-gtk/galago-gtk-sharp.dll.config.in	2007-06-22 20:42:44.078125000 -0500
+@@ -0,0 +1,3 @@
++<configuration>
++	<dllmap dll="libgalago-gtk" target="@LIB_PREFIX@galago-gtk@LIB_SONAME@1@LIB_SUFFIX@"/>
++</configuration>
+diff -urN -x CYGWIN-PATCHES -x 'aclocal.m4*' -x autom4te.cache -x config.cache -x config.log -x config.status -x config.h -x config.h.in -x ABOUT-NLS -x Makefile.in.in -x Makevars.template -x '*SlackBuild*' -x '*.egg-info' -x '*.class' -x '*.pyc' -x '*.mo' -x '*.gmo' -x '*.orig' -x '*.rej' -x '*.spec' -x '*.temp' -x '*~' -x '*.stackdump' -x COPYING -x INSTALL -x compile -x config-ml.in -x config.guess -x config.sub -x depcomp -x elisp-comp -x install-sh -x ltmain.sh -x mdate-sh -x missing -x mkinstalldirs -x py-compile -x symlink-tree -x texinfo.tex -x ylwrap -x Makefile.in -x makefile.in -x configure -x omf.make -x xmldocs.make -x gnome-doc-utils.make -x gnome-doc-utils.m4 -x intltool.m4 -x intltool-extract -x intltool-extract.in -x intltool-merge -x intltool-merge.in -x intltool-update -x intltool-update.in -x '*.xml' origsrc/galago-gtk-sharp-0.5.0/sources/galago-gtk-sharp-sources.xml.in src/galago-gtk-sharp-0.5.0/sources/galago-gtk-sharp-sources.xml.in
+--- origsrc/galago-gtk-sharp-0.5.0/sources/galago-gtk-sharp-sources.xml.in	2006-03-25 19:39:52.000000000 -0600
++++ src/galago-gtk-sharp-0.5.0/sources/galago-gtk-sharp-sources.xml.in	2007-06-22 20:38:43.281250000 -0500
+@@ -2,7 +2,7 @@
+  <api filename="../galago-gtk/galago-gtk-api.raw">
+   <library name="libgalago-gtk">
+    <namespace name="Galago.Gtk">
+-    <dir>@srcdir@/libgalago-gtk/libgalago-gtk</dir>
++    <dir>libgalago-gtk/libgalago-gtk</dir>
+    </namespace>
+   </library>
+  </api>
+diff -urN -x CYGWIN-PATCHES -x 'aclocal.m4*' -x autom4te.cache -x config.cache -x config.log -x config.status -x config.h -x config.h.in -x ABOUT-NLS -x Makefile.in.in -x Makevars.template -x '*SlackBuild*' -x '*.egg-info' -x '*.class' -x '*.pyc' -x '*.mo' -x '*.gmo' -x '*.orig' -x '*.rej' -x '*.spec' -x '*.temp' -x '*~' -x '*.stackdump' -x COPYING -x INSTALL -x compile -x config-ml.in -x config.guess -x config.sub -x depcomp -x elisp-comp -x install-sh -x ltmain.sh -x mdate-sh -x missing -x mkinstalldirs -x py-compile -x symlink-tree -x texinfo.tex -x ylwrap -x Makefile.in -x makefile.in -x configure -x omf.make -x xmldocs.make -x gnome-doc-utils.make -x gnome-doc-utils.m4 -x intltool.m4 -x intltool-extract -x intltool-extract.in -x intltool-merge -x intltool-merge.in -x intltool-update -x intltool-update.in -x '*.xml' origsrc/galago-gtk-sharp-0.5.0/tests/Makefile.am src/galago-gtk-sharp-0.5.0/tests/Makefile.am
+--- origsrc/galago-gtk-sharp-0.5.0/tests/Makefile.am	2006-03-27 13:49:37.000000000 -0600
++++ src/galago-gtk-sharp-0.5.0/tests/Makefile.am	2007-06-22 20:41:03.515625000 -0500
+@@ -14,10 +14,10 @@
+ all: $(TARGETS)
+ 
+ test-chooser.exe: test-chooser.cs $(ASSEMBLIES)
+-	$(CSC) /out:$@ $(REFERENCES) $(srcdir)/$<
++	$(CSC) /out:$@ $(REFERENCES) $<
+ 
+ test-presence-icon.exe: test-presence-icon.cs $(ASSEMBLIES)
+-	$(CSC) /out:$@ $(REFERENCES) $(srcdir)/$<
++	$(CSC) /out:$@ $(REFERENCES) $<
+ 
+ EXTRA_DIST = test-chooser.cs test-presence-icon.cs
+ CLEANFILES = $(TARGETS)

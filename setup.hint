@@ -1,0 +1,4 @@
+category: Dotnet Gnome
+requires: galago-sharp glib-sharp2 gtk-sharp2 libgalago-gtk mono
+sdesc: "Mono C# bindings for the Galago GTK+ library"
+ldesc: "Mono C# bindings for the Galago GTK+ library"
